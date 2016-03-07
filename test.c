@@ -78,16 +78,24 @@ int	main(int argc, char **argv)
 	int		size_line;
 	int		endian;
 	int		*data;
-	int		x;
-	int		y;
+	int		x1;
+	int		y1;
+	int		x2;
+	int		y2;
 	char	*line;
 	int		i;
 	int		j;
 	int		fd;
+	int		nlines;
 	t_fdf	*list;
 	t_fdf	*start;
 
-/*	list = NULL;
+	if (argc != 2)
+	{
+		ft_putendl("Nombre d'arguments non conforme");
+		return (0);
+	}
+	list = NULL;
 	fd = open(argv[1], O_RDONLY);
 	while (get_next_line(fd, &line) != 0)
 		list = ft_list_insert_back(list, line);
@@ -116,24 +124,46 @@ int	main(int argc, char **argv)
 		write (1, "\n", 1);
 		list = list->next;
 	}
-	list = start;*/
+	list = start;
 //	return (0);
 	mlx = mlx_init();
 	win = mlx_new_window(mlx, 400, 400, "mlx 42");
 	img = mlx_new_image(mlx, 400, 400);
 	data = (int*)mlx_get_data_addr(img, &bites, &size_line, &endian);
-	data[47] = 0x00FF0000;
-	//	y = 40;
-	/*	while (y < 150)
+	i = 0;
+	nlines = 0;
+	while (list)
+	{
+		i = 0;
+		j = 0;
+		while (i < 19)
 		{
-		x = 40;
-		while (x < 150)
+			data[i+ j + nlines] = 0x00FF0000 * list->tab[i];
+			i++;
+			j = j + 10;
+		}
+		nlines = nlines + 4000;
+		list = list->next;
+	}
+	list = start;
+	nlines = 0;
+	while (list)
+	{
+		i = 0;
+		j = 0;
+		while ((i + 1) < 18)
 		{
-		mlx_pixel_put(mlx, win, x, y, 0x00FFFFFF);
-		x++;
+			x1 = data[i + j];
+			y1 = nlines / 400 + (nlines % 400);
+			x2 = data[i + j + 10];
+			y2 = nlines / 400 + (nlines % 400);
+			bresenham(x1, y1, x2, y2, data, 400);
+			i++;
+			j = j + 10;
 		}
-		y++;
-		}
+		nlines = nlines + 4000;
+		list = list->next;
+	}
 	//	mlx_key_hook(win, my_key_funct, win);*/
 	mlx_put_image_to_window(mlx, win, img, 0, 0);
 	mlx_loop(mlx);
