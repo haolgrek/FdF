@@ -6,11 +6,21 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/07 15:16:23 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/09 18:48:27 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/09 21:05:24 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int		*blacktab(t_mlx *m)
+{
+	int	i;
+
+	i = 0;
+	while (i < m->xsize * m->ysize)
+		m->intab[i++] = 0;
+	return (m->intab);
+}
 
 void	ft_put_pixels(int x, int y, t_mlx *m, int z)
 {
@@ -66,44 +76,44 @@ void	ft_line(t_mlx *m, t_pos *p, int z)
 	}
 }
 
-void	bresenham_x(t_mlx *m, t_file *f)
+void	bresenham_x(t_mlx *m, t_data *file)
 {
 	int		i;
 	t_pos	p;
 
-	while (f)
+	while (file)
 	{
 		i = 0;
-		while (i + 1 < f->len)
+		while (i + 1 < file->len)
 		{
-			p.x1 = i * m->gap - f->tab[i] * m->height;
-			p.y1 = (f->y * m->gap - f->tab[i] * m->height);
-			p.x2 = (i + 1) * m->gap - f->tab[i + 1] * m->height;
-			p.y2 = (f->y * m->gap - f->tab[i + 1] * m->height);
-			ft_line(m, &p, f->tab[i]);
+			p.x1 = i * m->gap - file->tab[i] * m->height;
+			p.y1 = (file->y * m->gap - file->tab[i] * m->height);
+			p.x2 = (i + 1) * m->gap - file->tab[i + 1] * m->height;
+			p.y2 = (file->y * m->gap - file->tab[i + 1] * m->height);
+			ft_line(m, &p, file->tab[i]);
 			i++;
 		}
-		f = f->next;
+		file = file->next;
 	}
 }
 
-void	bresenham_y(t_mlx *m, t_file *f)
+void	bresenham_y(t_mlx *m, t_data *file)
 {
 	int		i;
 	t_pos	p;
 
-	while (f)
+	while (file)
 	{
 		i = 0;
-		while (i < f->len && f->next)
+		while (i < file->len && file->next)
 		{
-			p.x1 = i * m->gap - f->tab[i] * m->height;
-			p.y1 = (f->y * m->gap - f->tab[i] * m->height);
-			p.x2 = i * m->gap - f->next->tab[i] * m->height;
-			p.y2 = (f->next->y * m->gap) - f->next->tab[i] * m->height;
-			ft_line(m, &p, f->tab[i]);
+			p.x1 = i * m->gap - file->tab[i] * m->height;
+			p.y1 = (file->y * m->gap - file->tab[i] * m->height);
+			p.x2 = i * m->gap - file->next->tab[i] * m->height;
+			p.y2 = (file->next->y * m->gap) - file->next->tab[i] * m->height;
+			ft_line(m, &p, file->tab[i]);
 			i++;
 		}
-		f = f->next;
+		file = file->next;
 	}
 }

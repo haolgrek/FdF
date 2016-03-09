@@ -6,44 +6,74 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/07 11:32:29 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/09 18:49:14 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/09 21:07:41 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
+# include "libft/libft.h"
+# include <stdlib.h>
+# include <mlx.h>
 
-typedef struct		s_fdf
+typedef struct		s_brs
 {
-	char			*line;
-	char			**split;
+	int				ex;
+	int				ey;
+	int				dx;
+	int				dy;
+	int				Dx;
+	int				Dy;
+	int				i;
+	int				Xincr;
+	int				Yincr;
+}					t_brs;
+
+typedef struct		s_pos
+{
+	int				x1;
+	int				y1;
+	int				x2;
+	int				y2;
+}					t_pos;
+
+typedef struct		s_data
+{
 	int				*tab;
-	int				index;
-	struct s_fdf	*next;
-}					t_fdf;
+	int				len;
+	int				y;
+	struct s_data	*next;
+}					t_data;
 
-typedef struct	s_brs
+typedef struct		s_mlx
 {
-	int			ex;
-	int			ey;
-	int			dx;
-	int			dy;
-	int			Dx;
-	int			Dy;
-	int			i;
-	int			Xincr;
-	int			Yincr;
-}				t_brs;
+	int				gap;
+	int				height;
+	int				imgx;
+	int				imgy;
+	void			*mlx;
+	void			*win;
+	void			*img;
+	int				bits;
+	int				size;
+	int				endian;
+	int				*intab;
+	int				xsize;
+	int				ysize;
+	int				maxx;
+	int				maxy;
+	int				color;
+	t_data			*data;
+}					t_mlx;
 
-typedef struct	s_pos
-{
-	int			x1;
-	int			y1;
-	int			x2;
-	int			y2;
-}				t_pos;
-
-void	bresenham_x(t_mlx *m, t_file *f);
-void	bresenham_y(t_mlx *m, t_file *f);
+void	bresenham_x(t_mlx *m, t_data *data);
+void	bresenham_y(t_mlx *m, t_data *data);
+t_data	*parse(char *file);
+t_data	*setlst(int fd, char *line);
+t_mlx	*init_mlx(t_data *file);
+void	other_events(int keycode, t_mlx *m);
+int		*fillintab(t_data *file, t_mlx *m, int *intab);
+int		*blacktab(t_mlx *m);
+int		quit(int keycode, t_mlx *m);
 
 #endif
