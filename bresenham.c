@@ -6,86 +6,104 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/07 15:16:23 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/07 17:38:18 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/09 18:48:27 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	putdata( int x, int y, int *data, int size)
+void	ft_put_pixels(int x, int y, t_mlx *m, int z)
 {
-	if ((x + y * size) < size * size)
-		data[x + y * size] = 0x00FFFF00;
+	m->intab[m->maxx * m->xsize + m->maxy * m->ysize +
+		(x + y * m->xsize)] = m->color - (z * 0x00FFFF / 10);
 }
 
-void	bresenham(int x1, int y1, int x2, int y2, int *data, int size)
+t_brs	*init_brs(t_pos *p)
 {
-	int	dx;
-	int	dy;
-	int	k;
-	int	e;
-	int	incx;
-	int	incy;
-	int	inc1;
-	int	inc2;
-	int	x;
-	int	y;
+	t_brs	*b;
 
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (dx < 0)
-		dx = -dx;
-	if (dy < 0)
-		dy = -dy;
-	incx = 1;
-	if(x2 < x1)
-		incx = -1;
-	incy = 1;
-	if(y2 < y1)
-		incy = -1;
-	x = x1;
-	y = y1;
+	b = malloc(sizeof(t_brs));
+	if (!b)
+		return ((void*)0);
+	b->ex = p->x2 - p->x1 >= 0 ? p->x2 - p->x1 : - (p->x2 - p->x1);
+	b->ey = p->y2 - p->y1 >= 0 ? p->y2 - p->y1 : - (p->y2 - p->y1);
+	b->dx = 2 * b->ex;
+	b->dy = 2 * b->ey;
+	b->Dx = b->ex;
+	b->Dy = b->ey;
+	b->i = 0;
+	b->Xincr = p->x1 >= p->x2 ? -1 : 1;
+	b->Yincr = p->y1 >= p->y2 ? -1 : 1;
+	return (b);
+}
 
-	if(dx > dy)
+void	ft_line(t_mlx *m, t_pos *p, int z)
+{
+	t_brs	*b;
+
+	b = init_brs(p);
+	while (b->i++ < b->Dx && b->Dx >= b->Dy)
 	{
-		putdata(x , y, data, size);
-		e = 2 * dy - dx;
-		inc1 = 2 * ( dy -dx);
-		inc2 = 2 * dy;
-		k = 0;
-		while (k < dx)
+		ft_put_pixels(p->x1, p->y1, m, z);
+		p->x1 += b->Xincr;
+		b->ex -= b->dy;
+		if (b->ex < 0)
 		{
-			if(e >= 0)
-			{
-				y += incy;
-				e += inc1;
-			}
-			else
-				e += inc2;
-			x += incx;
-			putdata(x , y, data, size);
-			k++;
+			p->y1 += b->Yincr;
+			b->ex += b->dx;
 		}
 	}
-	else
+	while (b->i++ < b->Dy && b->Dx <= b->Dy)
 	{
-		putdata(x , y, data, size);
-		e = 2 * dx - dy;
-		inc1 = 2 * ( dx - dy);
-		inc2 = 2 * dx;
-		k = 0;
-		while(k < dy)
+		ft_put_pixels(p->x1, p->y1, m, z);
+		p->y1 += b->Yincr;
+		b->ey -= b->dx;
+		if (b->ey < 0)
 		{
-			if(e >= 0)
-			{
-				x += incx;
-				e += inc1;
-			}
-			else
-				e += inc2;
-			y += incy;
-			putdata(x , y, data, size);
-			k++;
+			p->x1 += b->Xincr;
+			b->ey += b->dy;
 		}
+	}
+}
+
+void	bresenham_x(t_mlx *m, t_file *f)
+{
+	int		i;
+	t_pos	p;
+
+	while (f)
+	{
+		i = 0;
+		while (i + 1 < f->len)
+		{
+			p.x1 = i * m->gap - f->tab[i] * m->height;
+			p.y1 = (f->y * m->gap - f->tab[i] * m->height);
+			p.x2 = (i + 1) * m->gap - f->tab[i + 1] * m->height;
+			p.y2 = (f->y * m->gap - f->tab[i + 1] * m->height);
+			ft_line(m, &p, f->tab[i]);
+			i++;
+		}
+		f = f->next;
+	}
+}
+
+void	bresenham_y(t_mlx *m, t_file *f)
+{
+	int		i;
+	t_pos	p;
+
+	while (f)
+	{
+		i = 0;
+		while (i < f->len && f->next)
+		{
+			p.x1 = i * m->gap - f->tab[i] * m->height;
+			p.y1 = (f->y * m->gap - f->tab[i] * m->height);
+			p.x2 = i * m->gap - f->next->tab[i] * m->height;
+			p.y2 = (f->next->y * m->gap) - f->next->tab[i] * m->height;
+			ft_line(m, &p, f->tab[i]);
+			i++;
+		}
+		f = f->next;
 	}
 }
