@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 11:39:41 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/10 11:39:47 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/12 21:56:54 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,26 +80,26 @@ int	tablen(char **split)
 	return (i);
 }
 
-int	*stoi(char **split)
+int	*create_tab(char **split)
 {
 	int	i;
 	int	j;
-	int	*new;
+	int	*tab;
 
 	i = 0;
 	j = 0;
 	while (split[i])
 		i++;
-	new = malloc(sizeof(int) * i);
+	tab = malloc(sizeof(int) * i);
 	while (j < i)
 	{
-		new[j] = ft_atoi(split[j]);
+		tab[j] = ft_atoi(split[j]);
 		j++;
 	}
-	return (new);
+	return (tab);
 }
 
-t_data	*setlst(int fd, char *line)
+t_data	*get_file(int fd, char *line)
 {
 	int		*tab;
 	int		len;
@@ -112,7 +112,7 @@ t_data	*setlst(int fd, char *line)
 	{
 		if (!checkline(line))
 			return (NULL);
-		tab = stoi(ft_strsplit(line, ' '));
+		tab = create_tab(ft_strsplit(line, ' '));
 		len = tablen(ft_strsplit(line, ' '));
 		if (!lst[0])
 		{
@@ -136,7 +136,7 @@ t_data	*parse(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (NULL);
-	start = setlst(fd, NULL);
+	start = get_file(fd, NULL);
 	close (fd);
 	return (start);
 }

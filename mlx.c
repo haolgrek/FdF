@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/09 19:56:14 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/09 21:06:30 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/12 22:22:03 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	other_events(int keycode, t_mlx *m)
 {
-	if (keycode == 69 || (keycode == 78 &	& m->gap > 0) || keycode == 83 ||
+	if (keycode == 69 || (keycode == 78 && m->gap > 0) || keycode == 83 ||
 			keycode == 84 || keycode == 89 || keycode == 91)
 	{
 		m->intab = blacktab(m);
@@ -108,7 +108,6 @@ t_mlx	*init_mlx(t_data *file)
 	m->mlx = mlx_init();
 	m->xsize = 1024;
 	m->ysize = 768;
-	max = max_sizes(file);
 	m->maxx = max[0];
 	m->maxy = max[1];
 	m->imgx = 75;
