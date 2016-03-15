@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/09 19:56:14 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/12 22:22:03 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/15 11:51:37 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	other_events(int keycode, t_mlx *m)
 {
 	if (keycode == 69 || (keycode == 78 && m->gap > 0) || keycode == 83 ||
-			keycode == 84 || keycode == 89 || keycode == 91)
+			keycode == 84 || keycode == 89 || keycode == 91 || keycode == 15)
 	{
 		m->intab = blacktab(m);
 		fillintab(m->data, m, m->intab);
@@ -24,11 +24,20 @@ void	other_events(int keycode, t_mlx *m)
 	}
 }
 
-int		quit(int keycode, t_mlx *m)
+void	reset(t_mlx *m)
 {
-	if (keycode == 53)
-		exit(0);
-	else if (keycode == 126)
+	m->height = 1;
+	m->color = 16777215;
+	m->xsize = 2400;
+	m->ysize = 1280;
+	m->imgx = 75;
+	m->imgy = 75;
+	m->gap = 1;
+}
+
+void	directions(int keycode, t_mlx *m)
+{
+	if (keycode == 126)
 		m->imgy -= 10;
 	else if (keycode == 124)
 		m->imgx += 10;
@@ -36,18 +45,27 @@ int		quit(int keycode, t_mlx *m)
 		m->imgy += 10;
 	else if (keycode == 123)
 		m->imgx -= 10;
-	else if (keycode == 69)
+}
+
+int		keys(int keycode, t_mlx *m)
+{
+	if (keycode == 53)
+		exit(0);
+	directions(keycode, m);
+	if (keycode == 69 && m->maxx * (m->gap + 2) < m->xsize)
 		m->gap++;
 	else if (keycode == 78 && m->gap > 0)
 		m->gap--;
 	else if (keycode == 83)
-		m->color -= 0x0F0F0F;
+		m->color -= 512;
 	else if (keycode == 84)
-		m->color += 0x0F0F0F;
+		m->color += 512;
 	else if (keycode == 89 && m->height > -3)
 		m->height--;
 	else if (keycode == 91 && m->height < 3)
 		m->height++;
+	else if (keycode == 15)
+		reset(m);
 	mlx_clear_window(m->mlx, m->win);
 	other_events(keycode, m);
 	mlx_put_image_to_window(m->mlx, m->win, m->img, m->imgx, m->imgy);
@@ -68,8 +86,8 @@ int		*fillintab(t_data *file, t_mlx *m, int *intab)
 			x = i * m->gap - file->tab[i] * m->height;
 			y = file->y * m->gap * m->xsize - file->tab[i] * m->height * 
 				m->xsize;
-			intab[m->maxx * m->xsize + m->maxy * m->ysize + x + y] = 0xFFFFFF
-				- file->tab[i] * 100;
+			intab[/*m->maxx * m->xsize + m->maxy * m->ysize*/ + x + y + 50] = 0xFFFFFF
+				- (file->tab[i] * 256);
 			i++;
 		}
 		file = file->next;
@@ -106,8 +124,8 @@ t_mlx	*init_mlx(t_data *file)
 	m->color = 16777215;
 	m->data = file;
 	m->mlx = mlx_init();
-	m->xsize = 1024;
-	m->ysize = 768;
+	m->xsize = 2400;
+	m->ysize = 1280;
 	m->maxx = max[0];
 	m->maxy = max[1];
 	m->imgx = 75;

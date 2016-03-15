@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/07 11:32:29 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/09 21:07:41 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/15 10:19:03 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ t_mlx	*init_mlx(t_data *file);
 void	other_events(int keycode, t_mlx *m);
 int		*fillintab(t_data *file, t_mlx *m, int *intab);
 int		*blacktab(t_mlx *m);
-int		quit(int keycode, t_mlx *m);
+int		keys(int keycode, t_mlx *m);
 
 #endif

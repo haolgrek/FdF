@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/07 15:16:23 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/09 21:05:24 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/15 11:51:56 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int		*blacktab(t_mlx *m)
 
 void	ft_put_pixels(int x, int y, t_mlx *m, int z)
 {
-	m->intab[m->maxx * m->xsize + m->maxy * m->ysize +
-		(x + y * m->xsize)] = m->color - (z * 0x00FFFF / 10);
+	m->intab[/*m->maxx * m->xsize + m->maxy * m->ysize*/ +
+		(x + 50 + y * m->xsize)] = m->color - (z * 0x00FFFF / 10);
 }
 
 t_brs	*init_brs(t_pos *p)

@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 11:39:41 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/12 21:56:54 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/15 10:19:06 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ int	main(int argc, char **argv)
 	bresenham_x(m, file);
 	bresenham_y(m, file);
 	mlx_put_image_to_window(m->mlx, m->win, m->img, m->imgx, m->imgy);
-	mlx_hook(m->win, 2, 1, quit, m);
+	mlx_hook(m->win, 2, 1, keys, m);
 	mlx_loop(m->mlx);
 	return (0);
 }
