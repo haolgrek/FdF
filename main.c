@@ -6,7 +6,7 @@
 /*   By: rluder <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 11:39:41 by rluder            #+#    #+#             */
-/*   Updated: 2016/03/15 10:19:06 by rluder           ###   ########.fr       */
+/*   Updated: 2016/03/15 15:00:29 by rluder           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,61 +16,7 @@
 #include <stdio.h>
 #include "libft/libft.h"
 
-int	ft_linelen(char *str)
-{
-	int	i;
-	int	wasspace;
-	int	len;
-
-	i = 0;
-	len = 0;
-	wasspace = 1;
-	while (str[i])
-	{
-		if (str[i] != ' ' && wasspace == 1)
-		{
-			wasspace = 0;
-			len++;
-		}
-		else if (str[i] == ' ')
-			wasspace = 1;
-		i++;
-	}
-	return (len);
-}
-
-int	checkline(char *str)
-{
-	static int	lastlen;
-	int			len;
-
-	if (!str)
-		return (0);
-	len = ft_linelen(str);
-	if (len == -1)
-		return (0);
-	if (lastlen > 0)
-		if (lastlen != len)
-			return (0);
-	lastlen = len;
-	return (1);
-}
-
-t_data	*ft_create_elem(int *tab, int len, int y)
-{
-	t_data	*lst;
-
-	lst = malloc(sizeof(t_data));
-	if (!lst)
-		return (NULL);
-	lst->tab = tab;
-	lst->len = len;
-	lst->y = y;
-	lst->next = NULL;
-	return (lst);
-}
-
-int	tablen(char **split)
+int		tablen(char **split)
 {
 	int	i;
 
@@ -80,7 +26,7 @@ int	tablen(char **split)
 	return (i);
 }
 
-int	*create_tab(char **split)
+int		*create_tab(char **split)
 {
 	int	i;
 	int	j;
@@ -137,11 +83,11 @@ t_data	*parse(char *file)
 	if (fd == -1)
 		return (NULL);
 	start = get_file(fd, NULL);
-	close (fd);
+	close(fd);
 	return (start);
 }
 
-int	main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	t_data	*file;
 	t_mlx	*m;
@@ -154,7 +100,7 @@ int	main(int argc, char **argv)
 	file = parse(argv[1]);
 	if (!file)
 	{
-		ft_putendl("File error");
+		ft_putendl("Incorrect Map");
 		return (0);
 	}
 	m = init_mlx(file);
